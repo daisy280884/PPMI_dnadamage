@@ -187,6 +187,6 @@ res_1_tb <- res_1_tb %>% mutate(genelabels = "")
 ## Sort by padj values 
 res_1_tb <- res_1_tb %>% arrange(padj)
 setwd("/Users/dsprovie/Desktop")
-openxlsx::write.xlsx(res_1_tb, file = file.path(getwd(), "DE_PD_CTRL.xlsx"))
-#or
+openxlsx::write.xlsx(res_1_tb, file = file.path(getwd(), "DE.xlsx"))
+
 
