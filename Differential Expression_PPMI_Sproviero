@@ -23,7 +23,7 @@ head(tx2gene)
 ## List all directories containing data  
 
 getwd()
-setwd("/Users/dsprovie/Desktop/BL_salmonfiles/BL_CTRL_PD/")
+setwd("/Users/dsprovie/Desktop/BL_salmonfiles/")
 samples <- list.files(path = "./", full.names = T, pattern="salmon.transcripts.sf$")
 samples
 names(samples) <- str_replace(samples,".//","") %>% 
@@ -43,7 +43,7 @@ head(data)
 
 ## load metadata to match Salmon files
 
-metasummary <- read_excel("~/Desktop/revision/metasummary_GITHUB.xlsx")
+metasummary <- read_excel("~/Desktop/revision/metasummary.xlsx")
 
 # Check that sample names match in both files
 meta<-data.frame(metasummary)
@@ -95,6 +95,14 @@ dds <- estimateSizeFactors(dds)
 #Note on factor levels
 dds$condition <- factor(dds$sampletype, levels = c("Control","iPD"))
 
+#or
+
+dds$condition <- factor(dds$sampletype, levels = c("Control","LRRK2_G2019S","GBA"))
+
+#or
+
+dds$condition <- factor(dds$sampletype, levels = c("Control","Prodromal"))
+
 #### 5. Run main fuction "DESeq" ####
 
 dds <- DESeq(dds)
@@ -109,6 +117,15 @@ plotDispEsts(dds)
 
 resultsNames(dds)
 contrast <- c("sampletype","iPD","Control")
+
+#or
+contrast <- c("sampletype","LRRK2_G2019S","GBA","Control")
+
+
+#or
+
+contrast <- c("sampletype","Prodromal","Control")
+
 res_1 <- results(dds, contrast=contrast, alpha = 0.05)
 class(res_1)
 
@@ -138,6 +155,18 @@ res_1_unshrunken <- res_1
 # MA plots
 # Apply fold change shrinkage
 res_1 <- lfcShrink(dds, coef="sampletype_iPD_vs_Control", type = "apeglm")
+
+#or
+res_1 <- lfcShrink(dds, coef="sampletype_LRRK2_G2019S_vs_Control", type = "apeglm")
+
+#or
+
+res_1 <- lfcShrink(dds, coef="sampletype_GBA_vs_Control", type = "apeglm")
+
+#or
+
+res_1 <- lfcShrink(dds, coef="sampletype_Prodomal_vs_Control", type = "apeglm")
+
 # MA plot using unshrunken fold changes
 plotMA(res_1_unshrunken, ylim=c(-2,2))
 # MA plot using shrunken fold changes
@@ -159,5 +188,5 @@ res_1_tb <- res_1_tb %>% mutate(genelabels = "")
 res_1_tb <- res_1_tb %>% arrange(padj)
 setwd("/Users/dsprovie/Desktop")
 openxlsx::write.xlsx(res_1_tb, file = file.path(getwd(), "DE_PD_CTRL.xlsx"))
-
+#or
 
